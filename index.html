@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <title>Brandos</title>
+
+   <style>
+ 
+      body {
+         background-color: #1e1e1e;
+         color: #d4d4d4;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         margin-top: 50px;
+         font-family: sans-serif;
+      }
+
+      .app-container {
+         display: flex;
+         flex-direction: row;      /* Places children side-by-side */
+         align-items: flex-start;  /* Aligns them at the top */
+         justify-content: center;  /* Centers the whole block on the page */
+         gap: 30px;                /* Adds space between canvas and text */
+         max-width: 1000px;
+         width: 100%;
+      }
+
+      .instructions {
+         max-width: 300px;         /* Prevents the text from stretching too far */
+         background-color: #2a2a2a;/* Slightly lighter box for contrast */
+         padding: 20px;
+         border-radius: 8px;
+         border: 1px solid #444;
+         color: #ccc;
+         line-height: 1.5;
+      }
+
+      .instructions ul {
+         list-style-type: none; /* This hides the bullets */
+         padding-left: 20px;    /* Optional: Shrinks the empty space where the bullet used to be */
+      }
+
+      /* Optional: Style keyboard keys to look like physical buttons */
+      kbd {
+         background-color: #444;
+         border: 1px solid #666;
+         border-radius: 4px;
+         padding: 2px 6px;
+         font-family: monospace;
+         font-size: 0.9em;
+         color: #fff;
+      }
+
+      .bottom-panel {
+         width: 100%;
+         max-width: 960px;      /* Matches the max-width of your app-container */
+         background-color: #2a2a2a;
+         padding: 20px;
+         border-radius: 8px;
+         border: 1px solid #444;
+         margin-top: 30px;       /* Pushes it down so it doesn't touch the canvas */
+         box-sizing: border-box; /* Keeps padding inside the defined width */
+      }
+
+      /* The class and id are both required for Emscripten's default hooks */
+      canvas.emscripten {
+         border: 2px solid #333;
+         border-radius: 0px;
+         box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+         image-rendering: pixelated; 
+         width: 640px; 
+         height: 480px;
+      }
+   </style>
+</head>
+<body>
+   <div class="app-container">
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+
+      <div class="instructions">
+         <h3>Shortcuts for Buttons</h3>
+         <ul>
+            <li><kbd>Home</kbd> for <kbd>Menu</kbd></li>
+            <li><kbd>Shift</kbd> + <kbd>PgDn</kbd> for <kbd>Plot</kbd></li>
+            <li><kbd>Shift</kbd> + <kbd>PgUp</kbd> for <kbd>Trace</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>A</kbd> for <kbd>Alpha</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> for <kbd>Cos</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd> for <kbd>Mode</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> for <kbd>f(x)</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd> for <kbd>Ln</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> for <kbd>Matrix</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> for <kbd>&pi;</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>Q</kbd> for <kbd>Etc</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> for <kbd>&radic;</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> for <kbd>Sin</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> for <kbd>Tan</kbd></li>
+            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd> for <kbd>Stat</kbd></li>
+         </ul>
+      </div>
+
+   </div>
+
+   <div class="bottom-panel">
+      <h3>About</h3>
+      <p>This is an emulator for a calculator I'm developing.
+         The calculator only works with keyboard input (no support for mouse input).
+         Typing in the letters <code>sin</code> will be interpreted as <code>s*i*n</code>.
+         The <kbd>Sin</kbd> button must be activated in order for sin to represent the sine function.
+      </p>
+   </div>
+
+   <script type='text/javascript'>
+      // This MUST contain print and printErr, or Emscripten will crash silently.
+      var Module = {
+         print: (function() {
+            return function(text) { console.log(text); };
+         })(),
+         printErr: function(text) {
+            console.error(text);
+         },
+         canvas: (function() {
+            var canvas = document.getElementById('canvas');
+            canvas.addEventListener("webglcontextlost", function(e) { 
+               alert('WebGL context lost. You will need to reload the page.'); 
+               e.preventDefault(); 
+            }, false);
+            return canvas;
+         })()
+      };
+    </script>
+
+    <script async type="text/javascript" src="index.js"></script>
+
+</body>
+</html>
