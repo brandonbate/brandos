@@ -18,8 +18,9 @@
 
       .app-container {
          display: flex;
-         flex-direction: row;      /* Places children side-by-side */
-         align-items: flex-start;  /* Aligns them at the top */
+         flex-direction: row;      /* Places children side-by-side */boot/
+         align-items: flex-start;  /* Aligns them at the top */ 
+         flex-wrap: wrap;
          justify-content: center;  /* Centers the whole block on the page */
          gap: 30px;                /* Adds space between canvas and text */
          max-width: 1000px;
@@ -69,49 +70,291 @@
          border-radius: 0px;
          box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
          image-rendering: pixelated; 
-         width: 640px; 
-         height: 480px;
+         width: 480px; 
+         height: 360px;
+         /* width: 640px; 
+         height: 480px; */
       }
+
+      .instructions button {
+         background-color: #444;
+         color: #fff;
+         border: 1px solid #666;
+         border-radius: 4px;
+         padding: 8px 12px;
+         font-size: 1.2em;
+         cursor: pointer;
+         margin-right: 5px;
+      }
+
+      .instructions button:hover {
+         background-color: #555;
+      }
+
+      .instructions button:active {
+         background-color: #007acc; /* A nice highlight when clicked */
+      }
+
+      .keypad-container {
+         display: grid;
+         /* This creates exactly 5 columns, all sharing 1 fraction (1fr) of the space equally */
+         grid-template-columns: repeat(5, 1fr); 
+
+         /* This creates exactly 9 rows, all equal height */
+         grid-template-rows: repeat(10, 1fr);    
+
+         gap: 4px; /* The space between the buttons */
+
+         width: 100%;
+         max-width: 400px; /* Adjust this to make the keypad wider or narrower */ 
+         max-height: 350px;
+         margin-top: 0px;
+      }
+
+      /* Style the buttons inside the grid */
+      .keypad-container button {
+         background-color: #444;
+         color: #fff;
+         border: 1px solid #666;
+         border-radius: 1px;
+         padding: 10px 8px; /* Tweak padding to make buttons taller/shorter */
+         font-size: 1.2em;
+
+         line-height: 1;         /* <--- Right here! Kills invisible text padding */
+         min-height: 0;          /* Kills browser safety minimums */
+         min-width: 0;
+         appearance: none;       /* Strips legacy OS button constraints */
+         box-sizing: border-box; /* Forces padding to sit INSIDE the width */ 
+
+         display: flex;
+         justify-content: center; /* Centers the text horizontally */
+         align-items: center;     /* Centers the text vertically */ 
+
+         cursor: pointer;
+         transition: background-color 0.1s; /* Smooth hover effect */ 
+         position: relative;
+      }
+
+      .keypad-container button:hover {
+         background-color: #555;
+      }
+
+      .keypad-container button:active {
+         background-color: #007acc; /* Blue highlight on click */
+      }
+
+      /* Optional: Hide empty tooltips so blank boxes don't appear on buttons without descriptions */
+      .keypad-container button[data-tooltip=""]::after,
+      .keypad-container button:not([data-tooltip])::after {
+         display: none;
+      }
+
+      /* Carve out a 2x2 block in the main grid and turn it into a 3x3 mini-grid */
+      .dpad-wrapper {
+         grid-column: span 2; /* Takes up 2 columns */
+         grid-row: span 3;    /* Takes up 3 rows */
+ 
+         display: grid;
+         grid-template-columns: repeat(3, 1fr);
+         grid-template-rows: repeat(3, 1fr);
+         gap: 4px; /* Tighter gap so the arrows feel connected */
+      }
+
+      /* Force the arrow buttons to fit perfectly in their smaller grid slots */
+      .dpad-wrapper button {
+         padding: 0; /* Overrides the bulky padding from the main buttons */
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         font-size: 1.2em; /* Makes the arrows easy to read */
+      }
+
+      /* Position the four arrows into the "plus" shape within the 3x3 mini-grid */
+      .btn-up { grid-column: 2; grid-row: 1; }
+      .btn-left { grid-column: 1; grid-row: 2; }
+      .btn-right { grid-column: 3; grid-row: 2; }
+      .btn-down { grid-column: 2; grid-row: 3; }
+
+      .status-bar {
+         grid-column: span 3; /* The Magic: Stretches it across 3 button slots */
+
+         background-color: #1a1a1a;
+         color: #00ff00; 
+         border: 1px solid #444;
+         border-radius: 4px;
+         font-family: monospace;
+         font-size: 0.9em;
+
+         /* Center the text vertically inside the new grid slot */
+         display: flex;
+         align-items: center; 
+         padding: 0 12px; /* Removes top/bottom padding, keeps side padding */
+
+         box-sizing: border-box;
+         transition: color 0.1s ease-in-out; 
+      }
+
    </style>
 </head>
 <body>
    <div class="app-container">
+
       <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
 
-      <div class="instructions">
-         <h3>Shortcuts for Buttons</h3>
-         <ul>
-            <li><kbd>Home</kbd> for <kbd>Menu</kbd></li>
-            <li><kbd>Shift</kbd> + <kbd>PgDn</kbd> for <kbd>Plot</kbd></li>
-            <li><kbd>Shift</kbd> + <kbd>PgUp</kbd> for <kbd>Trace</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>A</kbd> for <kbd>Alpha</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> for <kbd>Cos</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd> for <kbd>Mode</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> for <kbd>f(x)</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd> for <kbd>Ln</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> for <kbd>Matrix</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> for <kbd>&pi;</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>Q</kbd> for <kbd>Etc</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> for <kbd>&radic;</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> for <kbd>Sin</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> for <kbd>Tan</kbd></li>
-            <li><kbd>Ctl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd> for <kbd>Stat</kbd></li>
-         </ul>
+      <div class="keypad-container">
+
+         <div class="dpad-wrapper">
+            <button class="btn-up" data-id="148">&#9650;</button>
+            <button class="btn-left" data-id="151">&#9664;</button>
+            <button class="btn-right" data-id="149">&#9654;</button>
+            <button class="btn-down" data-id="150">&#9660;</button> 
+         </div>
+
+         <div class="status-bar" id="status-bar"></div>
+
+         <button data-id="134">power</button>
+         <button data-id="129" data-tooltip="Shift + PgDn">plot</button>
+         <button data-id="130" data-tooltip="Home">menu</button>
+
+         <button data-id="137" data-tooltip="Shift + Ctl + D">mode</button>
+         <button data-id="132" data-tooltip="Shift + PgUp">trace</button>
+         <button data-id="133" data-tooltip="Shift + Ctl + A">alpha</button>
+
+         <button data-id="128" data-tooltip="Shift + Ctl + M">matrix</button>
+         <button data-id="131" data-tooltip="Shift + Ctl + U">stat</button>
+         <button data-id="162" data-tooltip="Shift + Ctl + Q">etc</button>
+         <button data-id="135" data-tooltip="Shift + Ctl + F">f(x)</button>
+         <button data-id="138" data-tooltip="Delete">clear</button>
+
+         <button data-id="139" data-tooltip="Hold for menu. Shift + Ctl + S">sin</button>
+         <button data-id="140" data-tooltip="Hold for menu. Shift + Ctl + C">cos</button>
+         <button data-id="141" data-tooltip="Hold for menu. Shift + Ctl + Y">tan</button>
+         <button data-id="142" data-tooltip="Shift + Ctl + L">ln</button>
+         <button data-id="143" data-tooltip="Shift + Ctl + E">exp</button>
+
+         <button data-id="40">(</button>
+         <button data-id="41">)</button>
+         <button data-id="94" data-tooltip="Hold to square">^</button>
+         <button data-id="144" data-tooltip="Shift + Ctl + R">sqrt</button>
+         <button data-id="47" data-tooltip="Hold for fraction">/</button>
+
+         <button data-id="145" data-tooltip="Shift + Ctl + P">&pi;</button>
+         <button data-id="55">7</button>
+         <button data-id="56">8</button>
+         <button data-id="57">9</button>
+         <button data-id="42" data-tooltip="Hold for cross">*</button>
+
+         <button data-id="121">y</button>
+         <button data-id="52">4</button>
+         <button data-id="53">5</button>
+         <button data-id="54">6</button>
+         <button data-id="45">-</button>
+
+         <button data-id="120">x</button>
+         <button data-id="49">1</button>
+         <button data-id="50">2</button>
+         <button data-id="51">3</button>
+         <button data-id="43">+</button>
+
+         <button data-id="61">=</button>
+         <button data-id="146">&#9003;</button>
+         <button data-id="48">0</button>
+         <button data-id="46" data-tooltip="Hold for ,">.</button>
+         <button data-id="147">Enter</button>
       </div>
-
    </div>
 
-   <div class="bottom-panel">
-      <h3>About</h3>
-      <p>This is an emulator for a calculator I'm developing.
-         The calculator only works with keyboard input (no support for mouse input).
-         Typing in the letters <code>sin</code> will be interpreted as <code>s*i*n</code>.
-         The <kbd>Sin</kbd> button must be activated in order for sin to represent the sine function.
-      </p>
-   </div>
+   <script>
+      function bindButtonTiming(btn) {
+         let startTime = 0;
+         let isPressed = false; // Prevents double-firing on mobile devices
 
-   <script type='text/javascript'>
-      // This MUST contain print and printErr, or Emscripten will crash silently.
+         const handleDown = (e) => {
+            e.preventDefault();
+            if (isPressed) return;
+            isPressed = true;
+
+            // Record the exact start time
+            startTime = performance.now(); 
+         };
+
+         const handleUp = (e) => {
+            e.preventDefault();
+            if (!isPressed) return;
+            isPressed = false;
+
+            // Calculate the total duration in milliseconds
+            const durationMs = performance.now() - startTime;
+         };
+
+         // Attach listeners
+         btn.addEventListener('mousedown', handleDown);
+         btn.addEventListener('touchstart', handleDown);
+
+         // Catch all release scenarios, including dragging the mouse away
+         btn.addEventListener('mouseup', handleUp);
+         btn.addEventListener('touchend', handleUp);
+         btn.addEventListener('mouseleave', handleUp); 
+      }
+ 
+      function bindCalculatorButtons() {
+         const buttons = document.querySelectorAll('.keypad-container button');
+         const statusBar = document.getElementById('status-bar'); // Grab the display screen
+
+         buttons.forEach(btn => {
+            const btnId = parseInt(btn.getAttribute('data-id'));
+            if (isNaN(btnId)) return;
+
+            // --- NEW: Status Bar Hover Logic ---
+            const tipText = btn.getAttribute('data-tooltip');
+            if (tipText) {
+               btn.addEventListener('mouseenter', () => {
+                  statusBar.textContent = tipText;
+               });
+               btn.addEventListener('mouseleave', () => {
+                  statusBar.textContent = ""; // Reverts when mouse leaves
+               });
+            }
+
+            let holdTimer;
+            let repeatInterval;
+
+            // This function stops the repeating instantly
+            const stopHold = (e) => {
+                if (e) e.preventDefault();
+                clearTimeout(holdTimer);
+                clearInterval(repeatInterval);
+            };
+
+            // This function starts the hold logic
+            const startHold = (e) => {
+               e.preventDefault();
+
+               // 1. Immediately fire the normal click once
+               Module._html_button_pressed(btnId,0);
+
+               // 2. Wait 500ms. If they haven't let go, start repeating
+               holdTimer = setTimeout(() => {
+
+                  Module._html_button_pressed(btnId,1);
+                  // 3. Fire the click every 50ms until they let go
+                  //repeatInterval = setInterval(() => {
+                  //   Module._html_button_pressed(btnId);
+                  //}, 50);
+               }, 500); 
+            };
+
+            // Start the timers when pressed
+            btn.addEventListener('mousedown', startHold);
+            btn.addEventListener('touchstart', startHold);
+
+            // Kill the timers when released or if the mouse drags away
+            btn.addEventListener('mouseup', stopHold);
+            btn.addEventListener('mouseleave', stopHold); 
+            btn.addEventListener('touchend', stopHold);
+         });
+      }
+
       var Module = {
          print: (function() {
             return function(text) { console.log(text); };
@@ -126,11 +369,15 @@
                e.preventDefault(); 
             }, false);
             return canvas;
-         })()
+         })(),
+         onRuntimeInitialized: function() {
+            bindCalculatorButtons();
+            console.log("Auto-repeating buttons bound and ready.");
+         }
       };
-    </script>
+</script>
 
-    <script async type="text/javascript" src="index.js"></script>
+<script async type="text/javascript" src="index.js"></script>
 
 </body>
 </html>
