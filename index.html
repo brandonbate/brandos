@@ -283,6 +283,370 @@
          btn.addEventListener('touchend', handleUp);
          btn.addEventListener('mouseleave', handleUp); 
       }
+
+      function updateDynamicButtons() {
+
+         // 1. Call the C++ function synchronously and capture the integer
+         const currentMode = Module._alpha_mode();
+         const buttons = document.querySelectorAll('.keypad-container button');
+
+         console.log("stuffy stuff");
+         buttons.forEach(btn => {
+            const btnId = parseInt(btn.getAttribute('data-id'));
+            if (isNaN(btnId)) return;
+
+            if (currentMode == 0) {
+               switch(btnId) {
+                  case 139:
+                     btn.innerHTML = "a";
+                     break;
+                  case 140:
+                     btn.innerHTML = "b";
+                     break;
+                  case 141:
+                     btn.innerHTML = "c";
+                     break;
+                  case 142:
+                     btn.innerHTML = "d";
+                     break;
+                  case 143:
+                     btn.innerHTML = "e";
+                     break;
+                  case 40:
+                     btn.innerHTML = "f";
+                     break;
+                  case 41:
+                     btn.innerHTML = "g";
+                     break;
+                  case 94:
+                     btn.innerHTML = "h";
+                     break;
+                  case 144:
+                     btn.innerHTML = "i";
+                     break;
+                  case 47:
+                     btn.innerHTML = "j";
+                     break;
+                  case 145:
+                     btn.innerHTML = "k";
+                     break;
+                  case 55:
+                     btn.innerHTML = "l";
+                     break;
+                  case 56:
+                     btn.innerHTML = "m";
+                     break;
+                  case 57:
+                     btn.innerHTML = "n";
+                     break;
+                  case 42:
+                     btn.innerHTML = "o";
+                     break;
+                  case 121:
+                     btn.innerHTML = "y";
+                     break;
+                  case 52:
+                     btn.innerHTML = "p";
+                     break;
+                  case 53:
+                     btn.innerHTML = "q";
+                     break;
+                  case 54:
+                     btn.innerHTML = "r";
+                     break;
+                  case 45:
+                     btn.innerHTML = "s";
+                     break;
+                  case 120:
+                     btn.innerHTML = "x";
+                     break;
+                  case 49:
+                     btn.innerHTML = "t";
+                     break;
+                  case 50:
+                     btn.innerHTML = "u";
+                     break;
+                  case 51:
+                     btn.innerHTML = "v";
+                     break;
+                  case 43:
+                     btn.innerHTML = "w";
+                     break;
+                  case 61:
+                     btn.innerHTML = "z";
+                     break;
+                  case 48:
+                     btn.innerHTML = "space";
+                     break;
+                  case 46:
+                     btn.innerHTML = "<";
+                     break;
+               }
+            } else if (currentMode == 1) {
+               switch(btnId) {
+                  case 139:
+                     btn.innerHTML = "A";
+                     break;
+                  case 140:
+                     btn.innerHTML = "B";
+                     break;
+                  case 141:
+                     btn.innerHTML = "C";
+                     break;
+                  case 142:
+                     btn.innerHTML = "D";
+                     break;
+                  case 143:
+                     btn.innerHTML = "E";
+                     break;
+                  case 40:
+                     btn.innerHTML = "F";
+                     break;
+                  case 41:
+                     btn.innerHTML = "G";
+                     break;
+                  case 94:
+                     btn.innerHTML = "H";
+                     break;
+                  case 144:
+                     btn.innerHTML = "I";
+                     break;
+                  case 47:
+                     btn.innerHTML = "J";
+                     break;
+                  case 145:
+                     btn.innerHTML = "K";
+                     break;
+                  case 55:
+                     btn.innerHTML = "L";
+                     break;
+                  case 56:
+                     btn.innerHTML = "M";
+                     break;
+                  case 57:
+                     btn.innerHTML = "N";
+                     break;
+                  case 42:
+                     btn.innerHTML = "O";
+                     break;
+                  case 121:
+                     btn.innerHTML = "Y";
+                     break;
+                  case 52:
+                     btn.innerHTML = "P";
+                     break;
+                  case 53:
+                     btn.innerHTML = "Q";
+                     break;
+                  case 54:
+                     btn.innerHTML = "R";
+                     break;
+                  case 45:
+                     btn.innerHTML = "S";
+                     break;
+                  case 120:
+                     btn.innerHTML = "X";
+                     break;
+                  case 49:
+                     btn.innerHTML = "T";
+                     break;
+                  case 50:
+                     btn.innerHTML = "U";
+                     break;
+                  case 51:
+                     btn.innerHTML = "V";
+                     break;
+                  case 43:
+                     btn.innerHTML = "W";
+                     break;
+                  case 61:
+                     btn.innerHTML = "Z";
+                     break;
+                  case 48:
+                     btn.innerHTML = "space";
+                     break;
+                  case 46:
+                     btn.innerHTML = "<";
+                     break;
+               }
+            } else if (currentMode == 2) {
+               switch(btnId) {
+                  case 139:
+                     btn.innerHTML = "&alpha;";
+                     break;
+                  case 140:
+                     btn.innerHTML = "&beta;";
+                     break;
+                  case 141:
+                     btn.innerHTML = "&chi;";
+                     break;
+                  case 142:
+                     btn.innerHTML = "&delta;";
+                     break;
+                  case 143:
+                     btn.innerHTML = "&epsilon;";
+                     break;
+                  case 40:
+                     btn.innerHTML = "&phi;";
+                     break;
+                  case 41:
+                     btn.innerHTML = "&gamma;";
+                     break;
+                  case 94:
+                     btn.innerHTML = "&eta;";
+                     break;
+                  case 144:
+                     btn.innerHTML = "";
+                     break;
+                  case 47:
+                     btn.innerHTML = "&kappa;";
+                     break;
+                  case 145:
+                     btn.innerHTML = "&pi;";
+                     break;
+                  case 55:
+                     btn.innerHTML = "&lambda;";
+                     break;
+                  case 56:
+                     btn.innerHTML = "&mu;";
+                     break;
+                  case 57:
+                     btn.innerHTML = "&nu;";
+                     break;
+                  case 42:
+                     btn.innerHTML = "";
+                     break;
+                  case 121:
+                     btn.innerHTML = "";
+                     break;
+                  case 52:
+                     btn.innerHTML = "";
+                     break;
+                  case 53:
+                     btn.innerHTML = "&theta;";
+                     break;
+                  case 54:
+                     btn.innerHTML = "&rho;";
+                     break;
+                  case 45:
+                     btn.innerHTML = "&sigma;";
+                     break;
+                  case 120:
+                     btn.innerHTML = "&xi;";
+                     break;
+                  case 49:
+                     btn.innerHTML = "&tau;";
+                     break;
+                  case 50:
+                     btn.innerHTML = "&psi;";
+                     break;
+                  case 51:
+                     btn.innerHTML = "";
+                     break;
+                  case 43:
+                     btn.innerHTML = "&omega;";
+                     break;
+                  case 61:
+                     btn.innerHTML = "&zeta;";
+                     break;
+                  case 48:
+                     btn.innerHTML = "space";
+                     break;
+                  case 46:
+                     btn.innerHTML = "<";
+                     break;
+               }
+            } else if (currentMode == 3) {
+               console.log("1 happens");
+               switch(btnId) {
+                  case 139:
+                     btn.innerHTML = "sin";
+                     break;
+                  case 140:
+                     btn.innerHTML = "cos";
+                     break;
+                  case 141:
+                     btn.innerHTML = "tan";
+                     break;
+                  case 142:
+                     btn.innerHTML = "ln";
+                     break;
+                  case 143:
+                     btn.innerHTML = "exp";
+                     break;
+                  case 40:
+                     btn.innerHTML = "(";
+                     break;
+                  case 41:
+                     btn.innerHTML = ")";
+                     break;
+                  case 94:
+                     btn.innerHTML = "^";
+                     break;
+                  case 144:
+                     btn.innerHTML = "sqrt";
+                     break;
+                  case 47:
+                     btn.innerHTML = "/";
+                     break;
+                  case 145:
+                     btn.innerHTML = "&pi;";
+                     break;
+                  case 55:
+                     btn.innerHTML = "7";
+                     break;
+                  case 56:
+                     btn.innerHTML = "8";
+                     break;
+                  case 57:
+                     btn.innerHTML = "9";
+                     break;
+                  case 42:
+                     btn.innerHTML = "*";
+                     break;
+                  case 121:
+                     btn.innerHTML = "y";
+                     break;
+                  case 52:
+                     btn.innerHTML = "4";
+                     break;
+                  case 53:
+                     btn.innerHTML = "5";
+                     break;
+                  case 54:
+                     btn.innerHTML = "6";
+                     break;
+                  case 45:
+                     btn.innerHTML = "-";
+                     break;
+                  case 120:
+                     btn.innerHTML = "x";
+                     break;
+                  case 49:
+                     btn.innerHTML = "1";
+                     break;
+                  case 50:
+                     btn.innerHTML = "2";
+                     break;
+                  case 51:
+                     btn.innerHTML = "3";
+                     break;
+                  case 43:
+                     btn.innerHTML = "+";
+                     break;
+                  case 61:
+                     btn.innerHTML = "=";
+                     break;
+                  case 48:
+                     btn.innerHTML = "0";
+                     break;
+                  case 46:
+                     btn.innerHTML = ".";
+                     break;
+               }
+            }
+         });
+      }
  
       function bindCalculatorButtons() {
          const buttons = document.querySelectorAll('.keypad-container button');
@@ -328,7 +692,9 @@
                   //repeatInterval = setInterval(() => {
                   //   Module._html_button_pressed(btnId);
                   //}, 50);
-               }, 500); 
+               }, 500);
+               
+               updateDynamicButtons()
             };
 
             // Start the timers when pressed
