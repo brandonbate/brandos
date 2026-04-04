@@ -3,7 +3,6 @@
 <head>
    <meta charset="utf-8">
    <title>Brandos</title>
-   <meta name="viewport" content="width=device-width">
 
    <style>
  
@@ -23,7 +22,7 @@
          align-items: flex-start;  /* Aligns them at the top */ 
          flex-wrap: wrap;
          justify-content: center;  /* Centers the whole block on the page */
-         gap: 30px;                /* Adds space between canvas and text */
+         gap: 10px;                /* Adds space between canvas and text */
          max-width: 1000px;
          width: 100%;
       }
@@ -107,7 +106,7 @@
          gap: 4px; /* The space between the buttons */
 
          width: 100%;
-         max-width: 400px; /* Adjust this to make the keypad wider or narrower */ 
+         max-width: 480px; /* Adjust this to make the keypad wider or narrower */ 
          max-height: 350px;
          margin-top: 0px;
       }
@@ -144,12 +143,6 @@
          background-color: #007acc; /* Blue highlight on click */
       }
 
-      /* Optional: Hide empty tooltips so blank boxes don't appear on buttons without descriptions */
-      .keypad-container button[data-tooltip=""]::after,
-      .keypad-container button:not([data-tooltip])::after {
-         display: none;
-      }
-
       /* Carve out a 2x2 block in the main grid and turn it into a 3x3 mini-grid */
       .dpad-wrapper {
          grid-column: span 2; /* Takes up 2 columns */
@@ -177,14 +170,7 @@
       .btn-down { grid-column: 2; grid-row: 3; }
 
       .status-bar {
-         grid-column: span 3; /* The Magic: Stretches it across 3 button slots */
-
-         background-color: #1a1a1a;
-         color: #00ff00; 
-         border: 1px solid #444;
-         border-radius: 4px;
-         font-family: monospace;
-         font-size: 0.9em;
+         grid-column: span 3;
 
          /* Center the text vertically inside the new grid slot */
          display: flex;
